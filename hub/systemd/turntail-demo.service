@@ -1,0 +1,16 @@
+[Unit]
+Description=Turntail spoken clock on the hub (demo mount)
+After=network-online.target icecast2.service
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/turntail-station stream /etc/turntail/demo.env
+Restart=always
+IgnoreSIGPIPE=no
+RestartSec=3
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ProtectProc=invisible
+[Install]
+WantedBy=multi-user.target

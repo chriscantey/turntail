@@ -1,0 +1,17 @@
+[Unit]
+Description=Turntail intermission loop on the hub (house mount)
+After=network-online.target icecast2.service
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/turntail-station stream /etc/turntail/house.env
+Restart=always
+IgnoreSIGPIPE=no
+RestartSec=5
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ProtectProc=invisible
+ReadOnlyPaths=/var/lib/turntail
+[Install]
+WantedBy=multi-user.target

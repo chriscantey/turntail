@@ -1,0 +1,23 @@
+[Unit]
+Description=Turntail hub app (page, stream proxy, queue)
+After=network-online.target tailscaled.service icecast2.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=turntail
+Group=turntail
+WorkingDirectory=/opt/turntail/hub/app
+EnvironmentFile=/etc/turntail/hub.env
+ExecStart=/home/turntail/.bun/bin/bun run server.ts
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/opt/turntail/hub/app/data /etc/turntail/stations.json
+PrivateTmp=true
+ProtectProc=invisible
+
+[Install]
+WantedBy=multi-user.target

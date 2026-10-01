@@ -1,0 +1,112 @@
+{
+  "software": [
+    {
+      "name": "Tailscale",
+      "by": "",
+      "role": "the network: who everyone is, the share that lets a friend in, and the only way into the hub",
+      "url": "https://tailscale.com/",
+      "license": ""
+    },
+    {
+      "name": "Icecast",
+      "by": "Xiph.Org Foundation",
+      "role": "the streaming server every source pushes into",
+      "url": "https://icecast.org/",
+      "license": "GPL-2.0"
+    },
+    {
+      "name": "FFmpeg",
+      "by": "the FFmpeg developers",
+      "role": "capture, encoding, gain and limiting on every station",
+      "url": "https://ffmpeg.org/",
+      "license": "LGPL-2.1 / GPL-2.0"
+    },
+    {
+      "name": "LAME",
+      "by": "the LAME project",
+      "role": "the MP3 encoder inside FFmpeg",
+      "url": "https://lame.sourceforge.io/",
+      "license": "LGPL-2.0"
+    },
+    {
+      "name": "SoX",
+      "by": "Chris Bagwell and contributors",
+      "role": "the tone bed of the spoken clock",
+      "url": "https://sourceforge.net/projects/sox/",
+      "license": "GPL-2.0 / LGPL-2.1"
+    },
+    {
+      "name": "eSpeak NG",
+      "by": "the eSpeak NG contributors",
+      "role": "the voice that reads the time",
+      "url": "https://github.com/espeak-ng/espeak-ng",
+      "license": "GPL-3.0"
+    },
+    {
+      "name": "ALSA utils",
+      "by": "the ALSA project",
+      "role": "arecord, the capture test on a station",
+      "url": "https://www.alsa-project.org/",
+      "license": "GPL-2.0"
+    },
+    {
+      "name": "jq",
+      "by": "Stephen Dolan and contributors",
+      "role": "the hub and station commands",
+      "url": "https://jqlang.org/",
+      "license": "MIT"
+    },
+    {
+      "name": "Bun",
+      "by": "Oven",
+      "role": "runs this page's server",
+      "url": "https://bun.sh/",
+      "license": "MIT"
+    },
+    {
+      "name": "Debian",
+      "by": "the Debian Project",
+      "role": "the hub and every Raspberry Pi station",
+      "url": "https://www.debian.org/",
+      "license": "DFSG"
+    }
+  ],
+  "data": [
+    {
+      "name": "Discogs",
+      "role": "record titles, years and covers for the platter box",
+      "url": "https://www.discogs.com/",
+      "note": "record data and images from the Discogs API"
+    },
+    {
+      "name": "MusicBrainz",
+      "role": "song lookup when Discogs has nothing",
+      "url": "https://musicbrainz.org/",
+      "note": "open music encyclopedia, CC0 data"
+    }
+  ],
+  "musicSources": {
+    "pixabay": {
+      "name": "Pixabay",
+      "url": "https://pixabay.com/music/",
+      "license": "Pixabay Content License",
+      "trackUrl": "https://pixabay.com/music/id-{id}/"
+    }
+  },
+  "fonts": [
+    {
+      "name": "Inter and Inter Tight",
+      "by": "Rasmus Andersson",
+      "role": "the type",
+      "url": "https://rsms.me/inter/",
+      "license": "OFL-1.1"
+    },
+    {
+      "name": "JetBrains Mono",
+      "by": "JetBrains",
+      "role": "the small labels and the clock",
+      "url": "https://www.jetbrains.com/lp/mono/",
+      "license": "OFL-1.1"
+    }
+  ]
+}

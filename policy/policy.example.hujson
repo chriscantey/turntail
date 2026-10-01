@@ -1,0 +1,41 @@
+// Turntail tailnet policy, an example. Paste it into the Access controls editor of the tailnet the
+// hub lives in, then change or delete the example streamer.
+//
+// Access model:
+//   1. Listeners are people on OTHER tailnets who accepted the hub's share link. They reach 443 only.
+//   2. A streamer is a listener whose login is named in a grant below. That one grant opens the
+//      source port AND carries the capability that makes the page show them their station.
+//      Their station is an ordinary device on their own tailnet, logged in as them, with no auth key or tag.
+//   3. Admins of this tailnet get everything on the hub, plus the admin role on the page.
+{
+	"tagOwners": {
+		"tag:hub": ["autogroup:admin"],
+	},
+
+	"grants": [
+		// Everyone who accepted the share: the page.
+		{"src": ["autogroup:shared"], "dst": ["tag:hub"], "ip": ["443"]},
+
+		// Streamers: one grant per person. The login is the one they accepted the share with, as
+		// their own Tailscale admin console shows it. The mount is their station name on the hub
+		// (turntail-hub stations add). Add {"role": "admin"} to the list to make them a page admin too.
+		{
+			"src": ["alice@example.com"],
+			"dst": ["tag:hub"],
+			"ip":  ["443", "8000"],
+			"app": {"turntail.internal/cap/role": [{"role": "streamer", "mount": "alice"}]},
+		},
+
+		// Tailnet admins: everything on the hub (Tailscale SSH, the page, the source port) and the admin role.
+		{
+			"src": ["autogroup:admin"],
+			"dst": ["tag:hub"],
+			"ip":  ["*"],
+			"app": {"turntail.internal/cap/role": [{"role": "admin"}]},
+		},
+	],
+
+	"ssh": [
+		{"action": "accept", "src": ["autogroup:admin"], "dst": ["tag:hub"], "users": ["root", "autogroup:nonroot"]},
+	],
+}

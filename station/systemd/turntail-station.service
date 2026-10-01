@@ -1,0 +1,21 @@
+[Unit]
+Description=Turntail station: send the turntable to the hub
+After=network-online.target tailscaled.service sound.target
+Wants=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/turntail-station stream
+Restart=always
+IgnoreSIGPIPE=no
+RestartSec=3
+SupplementaryGroups=audio
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ProtectProc=invisible
+
+[Install]
+WantedBy=multi-user.target
