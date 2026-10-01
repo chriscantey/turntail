@@ -1,6 +1,6 @@
 # Broadcasting
 
-This guide sets up a station: a Raspberry Pi next to your turntable that sends your records to the hub, so your friends hear them on the page. It takes about an hour, most of it waiting for the Pi. Every step happens on your own phone, computer and Pi, and nobody else needs to touch them.
+This guide sets up a station: a Raspberry Pi next to your turntable that sends your records to the hub, so your friends hear them on the page. It takes about an hour, most of it waiting for the Pi. You write a memory card on your computer, and everything after that happens in your web browser. Nobody else needs to touch your Pi.
 
 <p align="center">
   <img src="station-parts.jpg" width="560" alt="A Raspberry Pi 3A+, a red Behringer UCA222 audio interface and an RCA cable on a sideboard, a turntable behind them">
@@ -11,14 +11,16 @@ This guide sets up a station: a Raspberry Pi next to your turntable that sends y
 | Part | Notes |
 |---|---|
 | A Raspberry Pi 3 Model A+, Pi 4 or Pi 5 | The 3A+ and Pi 5 are tested, and the Pi 4 should work the same. Another Debian machine, like an old laptop, should work too: skip steps 2 to 4, keep its own name in place of `<station name>-station`, and know that setup turns off MagicDNS on it. The 3A+ is the cheapest that does the job. Raspberry Pi's [product page](https://www.raspberrypi.com/products/raspberry-pi-3-model-a-plus/) lists approved resellers for your country, or in the US try [Adafruit](https://www.adafruit.com/product/4027). |
-| The right power supply for it | Pi 4 and Pi 5 take USB-C, the 3A+ takes micro-USB (5 V 2.5 A, [Adafruit](https://www.adafruit.com/product/1995)). The official Raspberry Pi supply for your board is the safe choice. |
+| The right power supply for it | Check the plug before you buy: the Pi 4 and Pi 5 take USB-C, the 3A+ takes micro-USB (5 V 2.5 A, [Adafruit](https://www.adafruit.com/product/1995)). The official Raspberry Pi supply for your board is the safe choice. |
+| A case | Optional, and nice to have since the Pi sits next to the turntable. The official case for your board is an easy pick, for example the [3A+ case](https://www.adafruit.com/product/4096). |
 | A microSD card | 8 GB or larger. Everything on it gets erased. |
 | A USB audio interface with a stereo line input | We use the Behringer UCA222 ([Amazon](https://www.amazon.com/dp/B0023BYDHK), [Sweetwater](https://www.sweetwater.com/store/detail/UCA222--behringer-u-control-uca222-usb-audio-interface), [B&H](https://www.bhphotovideo.com/c/product/1821212-REG/behringer_uca222_16_bit_48khz_2_channel_usb_audio.html)). Any USB audio interface that works without a driver should work, and setup finds it by itself. |
 | A stereo RCA cable | Red and white plugs at both ends, from the turntable to the interface. |
 | A turntable with a LINE output | Many have a LINE/PHONO switch on the back. If yours only has a PHONO output, either put a phono preamp between the turntable and the interface, or use a [Behringer UFO202](https://www.sweetwater.com/store/detail/UFO202--behringer-u-phono-ufo202-usb-audio-interface) instead of the UCA222. It's the same kind of interface with a phono preamp built in. We haven't tested it yet. |
-| A computer | Mac, Windows or Linux, to write the card and to type a few commands into the Pi. |
+| A computer | Mac, Windows or Linux, to write the card and to type a few commands into the Pi from a browser. |
 | Your Wi-Fi name and password | The Pi joins your Wi-Fi. |
 | A Tailscale account | Free for personal use. The [listening guide](listening.md) covers making one. |
+| A Raspberry Pi ID | Free, from [id.raspberrypi.com](https://id.raspberrypi.com/). It lets you open a terminal on your Pi from your browser. |
 
 This guide assumes you are already a listener: you followed the [listening guide](listening.md), and the page plays on your phone. That matters for the Pi, because it can only reach the hub through a Tailscale account that has accepted the hub's share.
 
@@ -40,20 +42,20 @@ You can carry on with steps 2 to 5 while you wait for the line.
 
 ## 2. Write the card
 
-1. On your computer, install and open [Raspberry Pi Imager](https://www.raspberrypi.com/software/).
+1. On your computer, install and open [Raspberry Pi Imager](https://www.raspberrypi.com/software/), version 2.0 or later.
 2. Choose your device: Raspberry Pi 4, Raspberry Pi 5, or Raspberry Pi 3 for the 3A+.
 3. Choose the operating system: **Raspberry Pi OS (other)**, then **Raspberry Pi OS Lite (64-bit)**.
 4. Choose your microSD card.
-5. Fill in the OS settings below. Recent versions of Imager walk you through them one page at a time after you choose the card. Older versions ask about OS customization when you press Next, and the settings are behind **Edit settings**.
+5. Imager then walks you through the customisation settings one page at a time. Fill them in like this:
 
     | Setting | What to put |
     |---|---|
     | Hostname | `station` |
-    | Username and password | Your own choice. Write them down, you need them in step 4. |
+    | Username and password | Your own choice. Write them down. |
     | Wi-Fi | Your Wi-Fi name and password, and your country. |
     | Time zone and keyboard | Yours. |
-    | SSH | Turned on, with password authentication. |
-    | Raspberry Pi Connect | Leave it off. |
+    | Raspberry Pi Connect | Turn it on, press **Open Raspberry Pi Connect**, and sign in with your Raspberry Pi ID. Imager picks up the sign-in by itself. |
+    | SSH | Your choice. If this is your first Pi, leave it off, because Connect is the easier way in. Turn it on if you also want to log in from a terminal on your computer. |
 
 6. Write the card and wait until Imager says it is finished.
 
@@ -66,17 +68,15 @@ You can carry on with steps 2 to 5 while you wait for the line.
 
 The first boot takes a few minutes while the Pi sets itself up, and a 3A+ is slower than a Pi 4 or 5. Give it five minutes.
 
-## 4. Log in to the Pi
+## 4. Open a terminal on the Pi in your browser
 
-On your computer, open a terminal. On a Mac that is the Terminal app, on Windows it is PowerShell. Type this, with the username you chose in step 2:
+1. On your computer, go to [connect.raspberrypi.com](https://connect.raspberrypi.com/) and sign in with your Raspberry Pi ID.
+2. Your Pi is listed as `station`. If it isn't there yet, give it another few minutes, then reload.
+3. Choose **Connect via**, then **Remote shell**.
 
-```
-ssh <username>@station.local
-```
+A terminal opens in a new browser tab, already logged in to the Pi. Everything from here on is typed or pasted into that tab.
 
-Answer `yes` when it asks about the fingerprint, then type the password you chose. You are in when the prompt changes to something like `<username>@station:~ $`. Everything from here on is typed into that window.
-
-If it says it cannot find `station.local`, wait another minute and try again. If you would rather not use a terminal on your computer, a keyboard and monitor plugged into the Pi work too: log in there with the same username and password, and type the same commands.
+If you would rather not use the browser, a keyboard and monitor plugged into the Pi work too. Log in with the username and password from step 2, and type the same commands.
 
 ## 5. Get Turntail onto the Pi
 
@@ -88,19 +88,19 @@ git clone https://github.com/chriscantey/turntail.git
 
 ## 6. Run setup with your three values
 
-When the line with your three values has arrived, type `sudo `, paste the line, then type ` bash ~/turntail/station/setup.sh` and press Enter. The whole thing looks like this:
+When the line with your three values has arrived, type `sudo `, paste the line into the browser terminal, then type ` bash ~/turntail/station/setup.sh` and press Enter. The whole thing looks like this:
 
 ```
 sudo HUB=<hub name> MOUNT=<station name> MOUNT_PW=<station password> bash ~/turntail/station/setup.sh
 ```
 
-Setup prints a heading for each stage, starting with `== packages`. Installing the packages takes several minutes, longer on a 3A+. Then it installs Tailscale.
+Setup prints a heading for each stage, starting with `== packages`. Installing the packages takes a while, longer on a 3A+. Keep the browser tab open the whole time, because closing or reloading it stops setup. Then it installs Tailscale.
 
 ## 7. Log the Pi in to Tailscale as yourself
 
 At `== tailscale`, setup prints `Log this device in to YOUR tailnet (the one you accepted the share with):` and then a link that starts with `https://login.tailscale.com/`. It waits there until you use the link.
 
-1. Copy the link and open it in a browser on your computer.
+1. Click the link, or copy it into a new browser tab.
 2. Sign in with the **same Tailscale account you used in step 1**, and connect the device.
 
 The Pi joins your Tailscale network as an ordinary device, logged in as you, and it shows up in your Machines list as `<station name>-station`. It uses no auth key and no tags, because a tagged device cannot use a shared machine. If you ever need to log the Pi in again, run `sudo tailscale logout` and then the step 6 command.
@@ -159,6 +159,10 @@ While you are on, the card shows how long is left, has buttons to wrap up early,
 
 Tailscale logs a device out after 180 days unless you turn that off, and the station would just stop with no visible reason. In your [Machines page](https://login.tailscale.com/admin/machines), open the menu on the `<station name>-station` row and choose **Disable key expiry**.
 
+## 11. The browser terminal from here on
+
+Leave it on. It is how you reach the Pi for the commands below, and only your Raspberry Pi ID can open it. If you would rather turn it off, run `rpi-connect shell off`. After that you need a keyboard and monitor on the Pi to type commands, including `rpi-connect shell on` to bring the browser terminal back.
+
 ## Day to day
 
 The Pi starts streaming by itself whenever it has power. It sends to the hub all the time it is on, about 115 MB an hour, whether or not you are on the air. If that matters on your connection, switch it off between sessions.
@@ -174,10 +178,11 @@ sudo turntail-station devices             list the audio devices the Pi can reco
 sudo turntail-station logs                follow what the station is doing (Ctrl-C to stop)
 ```
 
-To get back into the Pi later, it is the same `ssh <username>@station.local` from step 4.
+To get back into the Pi later, open its remote shell at [connect.raspberrypi.com](https://connect.raspberrypi.com/) as in step 4.
 
 ## If something is off
 
+- **The browser tab closed or reloaded during setup.** Run `sudo dpkg --configure -a`, then the step 6 command again. Setup picks up where it left off.
 - **No sound on the page, but you are live.** Run `sudo turntail-station test 10` with the record playing and read the numbers as in step 8.
 - **The interface is missing.** `sudo turntail-station devices` lists what the Pi can record from. If your interface is not there, unplug it and plug it back in, then run the step 6 command again.
 - **`status` says NOT reachable.** Check that Tailscale is still logged in with `tailscale status`, that the hub still appears in your Machines list, and ask the hub owner whether your login is still on the hub.

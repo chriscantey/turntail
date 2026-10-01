@@ -11,9 +11,10 @@ HERE=$(cd "$(dirname "$0")" && pwd)
 log() { printf '\n== %s\n' "$*"; }
 
 log "packages"
+echo "This can take a while, longer on a Pi 3A+. Keep this window open."
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -q
-apt-get install -y -q ffmpeg alsa-utils curl ca-certificates jq espeak-ng sox libsox-fmt-mp3 >/dev/null
+apt-get install -y -q ffmpeg alsa-utils curl ca-certificates jq espeak-ng sox libsox-fmt-mp3
 
 log "tailscale"
 if ! command -v tailscale >/dev/null; then
@@ -74,5 +75,5 @@ systemctl daemon-reload
 systemctl enable turntail-station >/dev/null
 systemctl restart turntail-station
 sleep 3
-systemctl --no-pager --lines=5 status turntail-station | tail -6
+echo "turntail-station service: $(systemctl is-active turntail-station)"
 log "done. Next: sudo turntail-station test 10 with a record playing, then Go live on the page."
